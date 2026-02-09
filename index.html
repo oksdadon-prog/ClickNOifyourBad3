@@ -56,7 +56,7 @@
       position: relative;
     }
 
-    #message {
+    #message, #gift {
       margin-top: 20px;
       font-size: 18px;
       color: #444;
@@ -69,14 +69,14 @@
     }
 
     @keyframes floatUp {
-      0% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-200px);
-        opacity: 0;
-      }
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-200px); opacity: 0; }
+    }
+
+    a {
+      color: #ff3366;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -92,17 +92,39 @@
     </div>
 
     <p id="message"></p>
+    <p id="gift" style="display:none;">
+      PS: I planted an olive tree in Palestine 🌿 in your name!<br>
+      Check your certificate here: 
+      <a href="https://www.pdffiller.com/s/CZAbrGfjiz" target="_blank">View Certificate</a>
+    </p>
   </div>
 
-  <!-- Audio -->
-  <audio id="song" src="https://oksdadon-prog.github.io/Music/teri-meri-hai-pyar-amar.mp3"></audio>
+  <!-- Main background music (hidden) -->
+  <iframe
+    id="ytPlayer"
+    width="0"
+    height="0"
+    src="https://www.youtube.com/embed/8Q5kzE8Zy7A?enablejsapi=1&autoplay=1&mute=1"
+    frameborder="0"
+    allow="autoplay">
+  </iframe>
+
+  <!-- Romantic song from 1:14 -->
+  <iframe
+    id="songPlayer"
+    width="0"
+    height="0"
+    src="https://www.youtube.com/embed/HFHl_tXSyaE?start=74&enablejsapi=1&autoplay=1&mute=1"
+    frameborder="0"
+    allow="autoplay">
+  </iframe>
 
   <script>
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const message = document.getElementById("message");
+    const gift = document.getElementById("gift");
     const question = document.getElementById("question");
-    const song = document.getElementById("song");
 
     const noMessages = [
       "Ayesha please na koiro 🥺",
@@ -117,8 +139,10 @@
     ];
 
     let noCount = 0;
+    let player, songPlayer;
 
-    noBtn.addEventListener("mouseover", () => {
+    // Function to dodge No button
+    const dodgeNo = () => {
       const x = Math.random() * (window.innerWidth - 120);
       const y = Math.random() * (window.innerHeight - 120);
       noBtn.style.position = "absolute";
@@ -127,9 +151,11 @@
 
       message.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
       noCount++;
-
       yesBtn.style.transform = `scale(${1 + noCount * 0.05})`;
-    });
+    };
+
+    noBtn.addEventListener("mouseover", dodgeNo);
+    noBtn.addEventListener("touchstart", dodgeNo);
 
     yesBtn.addEventListener("click", () => {
       question.textContent = "YAYYY AYESHA 💖🥰";
@@ -140,15 +166,26 @@
       noBtn.style.display = "none";
       createHearts();
 
-      // play song after 1.5s delay
-      setTimeout(() => {
-        song.play();
-      }, 1500);
+      // Play main background music
+      if (player) {
+        player.unMute();
+        player.playVideo();
+      }
+
+      // Show olive tree gift + PDF link
+      gift.style.display = "block";
+
+      // Play romantic song from 1:14
+      if (songPlayer) {
+        songPlayer.unMute();
+        songPlayer.playVideo();
+      }
     });
 
+    // Hearts animation
     function createHearts() {
       const icons = ["💗","💖","🌸","✨"];
-      for (let i = 0; i < 30; i++) {
+      const interval = setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.textContent = icons[Math.floor(Math.random() * icons.length)];
@@ -156,7 +193,18 @@
         heart.style.top = "100vh";
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 3000);
-      }
+      }, 200);
+      setTimeout(() => clearInterval(interval), 4000);
+    }
+
+    // Load YouTube API
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytPlayer');
+      songPlayer = new YT.Player('songPlayer');
     }
   </script>
 
