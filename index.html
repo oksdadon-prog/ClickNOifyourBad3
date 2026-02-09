@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ayesha 💖</title>
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      max-width: 90%;
+    }
+
+    h1 {
+      color: #ff3366;
+    }
+
+    .buttons {
+      margin-top: 25px;
+    }
+
+    button {
+      padding: 14px 28px;
+      font-size: 18px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      margin: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    #yesBtn {
+      background: #ff3366;
+      color: white;
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.1);
+    }
+
+    #noBtn {
+      background: #e0e0e0;
+      position: relative;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      animation: floatUp 3s linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-200px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h1 id="question">Ayesha, will you be my Valentine, meri jaan? 💕</h1>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 🙃</button>
+    </div>
+
+    <p id="message"></p>
+  </div>
+
+  <!-- Audio -->
+  <audio id="song" src="https://oksdadon-prog.github.io/Music/teri-meri-hai-pyar-amar.mp3"></audio>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const message = document.getElementById("message");
+    const question = document.getElementById("question");
+    const song = document.getElementById("song");
+
+    const noMessages = [
+      "Ayesha please na koiro 🥺",
+      "Hey… eto taratari no bolo na 😔",
+      "Just think once, meri jaan 💭💞",
+      "Mon ta ektu hurt hoye gelo 💔",
+      "Ayeshaaa 😭 ekbar yes bolo na",
+      "You’re too cute to say no, meri jaan 🥹",
+      "Ami ektu shy hoye gesi 🙈",
+      "Please meri jaan, last chance 😤💘",
+      "No button ta honestly sirf dikhane ke liye 😏"
+    ];
+
+    let noCount = 0;
+
+    noBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * (window.innerWidth - 120);
+      const y = Math.random() * (window.innerHeight - 120);
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      message.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
+      noCount++;
+
+      yesBtn.style.transform = `scale(${1 + noCount * 0.05})`;
+    });
+
+    yesBtn.addEventListener("click", () => {
+      question.textContent = "YAYYY AYESHA 💖🥰";
+      message.innerHTML =
+        "I knew it 💞 meri jaan 😌<br>" +
+        "So… you’re officially my Valentine now 🌹✨";
+
+      noBtn.style.display = "none";
+      createHearts();
+
+      // play song after 1.5s delay
+      setTimeout(() => {
+        song.play();
+      }, 1500);
+    });
+
+    function createHearts() {
+      const icons = ["💗","💖","🌸","✨"];
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = icons[Math.floor(Math.random() * icons.length)];
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "100vh";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+      }
+    }
+  </script>
+
+</body>
+</html>
